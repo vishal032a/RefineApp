@@ -1,5 +1,5 @@
-import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
-import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
+import { Authenticated, Refine } from "@refinedev/core";
+import {  DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
@@ -18,7 +18,9 @@ import routerBindings, {
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import { dataProvider, liveProvider } from "@refinedev/supabase";
+// import { dataProvider, liveProvider } from "";
+import { dataProvider } from "providers/supabase";
+import { liveProvider } from "providers/supabase"
 import {
   BlogPostCreate,
   BlogPostEdit,
@@ -31,6 +33,12 @@ import {
   CategoryList,
   CategoryShow,
 } from "pages/categories";
+import {
+  PostCreate,
+  PostEdit,
+  PostShow,
+  PostsList
+} from "pages/Posts"
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { supabaseClient } from "utility";
 import authProvider from "./authProvider";
@@ -40,7 +48,6 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <CssBaseline />
@@ -74,12 +81,22 @@ function App() {
                       canDelete: true,
                     },
                   },
+                  {
+                    name: "Posts",
+                    list: "/Posts",
+                    create: "/Posts/create",
+                    edit: "/Posts/edit/:id",
+                    show: "/Posts/show/:id",
+                    meta: {
+                      canDelete: true,
+                    },
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
                   useNewQueryKeys: true,
-                  projectId: "F1EwOm-bIZCSJ-mvZ54Z",
+                  projectId: "smxdjiycovhzdnckxcay",
                   liveMode: "auto",
                 }}
               >
@@ -113,6 +130,12 @@ function App() {
                       <Route path="create" element={<CategoryCreate />} />
                       <Route path="edit/:id" element={<CategoryEdit />} />
                       <Route path="show/:id" element={<CategoryShow />} />
+                    </Route>
+                    <Route path="/Posts">
+                      <Route index element={<PostsList/>} />
+                      <Route path="create" element={<PostCreate/>} />
+                      <Route path="edit/:id" element={<PostEdit/>} />
+                      <Route path="show/:id" element={<PostShow/>} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
@@ -155,7 +178,6 @@ function App() {
                 <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
               </Refine>
-              <DevtoolsPanel />
             </DevtoolsProvider>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
